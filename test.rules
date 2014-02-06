@@ -1,0 +1,72 @@
+# BODY match test
+{
+    METHOD POST
+    BODY match INSIDE BODY
+
+    200
+    BODY match test result
+}
+
+# BODY eq test
+{
+    BODY eq THE WHOLE BODY
+    METHOD POST
+
+    200
+    BODY eq test result
+}
+
+# URL eq test
+{
+    URL eq /a/b/c
+    METHOD GET
+
+    200
+    URL eq test result
+}
+
+# URL match test
+{
+    URL match /a/b/c
+    METHOD GET
+
+    200
+    URL match test result
+}
+
+# PARAM match test
+{
+    PARAM x match wtf
+
+    200
+    PARAM match test result
+}
+
+# PARAM eq test
+{
+    PARAM y eq yval
+
+    200
+    PARAM eq test result
+}
+
+# Complex test
+{
+    METHOD PUT
+    URL match /complex/test/1
+    BODY eq BODY
+    PARAM param1 eq a
+    PARAM param2 match b
+
+    200
+    Complex test result
+}
+
+# Substitute test
+{
+    METHOD GET
+    URL eq /substitute
+
+    200
+    Here goes query param a: ${a}
+}

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+zip restmock *.py && mv restmock.zip restmock
