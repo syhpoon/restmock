@@ -38,6 +38,7 @@ class Rule(object):
     METHOD_POST = "POST"
     METHOD_PUT = "PUT"
     METHOD_DELETE = "DELETE"
+    METHOD_HEAD = "HEAD"
 
     def __init__(self, type=None, op=None, method=None, data=None):
         self.type = type
@@ -134,12 +135,12 @@ def parse_rule_url(raw):
 
 def parse_rule_method(raw):
     """
-    METHOD GET|POST|PUT|DELETE
+    METHOD GET|POST|PUT|DELETE|HEAD
     """
 
     rule = Rule(type=Rule.TYPE_METHOD)
 
-    if raw in [Rule.METHOD_GET, Rule.METHOD_POST,
+    if raw in [Rule.METHOD_GET, Rule.METHOD_POST, Rule.METHOD_HEAD,
                Rule.METHOD_PUT, Rule.METHOD_DELETE]:
         rule.method = raw
     else:
