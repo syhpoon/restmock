@@ -28,6 +28,7 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
 
                return
 
+        print "*** No rule matched: %s" % (self.path)
         self.send_response(404, "")
         self.end_headers()
         self.wfile.write("")
