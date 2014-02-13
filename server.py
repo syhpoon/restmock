@@ -37,6 +37,7 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
     do_POST = process
     do_PUT = process
     do_DELETE = process
+    do_HEAD = process
 
     def substitute_body(self, body):
         """
