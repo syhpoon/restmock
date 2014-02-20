@@ -5,7 +5,11 @@
 ##
 
 import sys
-import argparse
+
+try:
+   import argparse
+except ImportError:
+   import argparse_ext as argparse
 
 import parser
 import server
