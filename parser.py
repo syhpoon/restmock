@@ -15,6 +15,9 @@ An action has following format:
   ...
 
   RESPONSE_CODE
+  [HEADER HEADER VALUE]
+  [HEADER ...]
+
   RESPONSE_BODY
 }
 """
@@ -93,19 +96,25 @@ class Action(object):
 
     def __init__(self):
         self.rules = []
+        self.headers = []
         self.response_code = None
         self.response_body = ""
 
     def add_rule(self, rule):
         self.rules.append(rule)
 
+    def add_header(self, header):
+        self.headers.append(header)
+
     def __call__(self, req):
         return all([r(req) for r in self.rules])
 
     def __str__(self):
-        return "<Action response_code=%s, response_body='%s', rules=[%s]" % \
+        return "<Action response_code=%s, response_body='%s', "\
+               "rules=[%s], headers=[%s]" % \
             (self.response_code, self.response_body,
-             ",".join([str(r) for r in self.rules]))
+             ",".join([str(r) for r in self.rules]),
+             self.headers)
 
 def parse_rule_url(raw):
     """
@@ -222,6 +231,18 @@ def parse_rule(line):
 
     return CMDS[cmd](rest)
 
+def parse_header(line):
+    """
+    HEADER <NAME> <VALUE>
+    """
+
+    r = re.search(r'HEADER\s+(.+?)\s+(.+?)', line)
+
+    if r is None:
+        raise Exception("Invalid header syntax")
+
+    return r.group(1), r.group(2)
+
 def parse_actions(path):
     """
     Parse actions file and return a list of Action() instances
@@ -236,6 +257,7 @@ def parse_actions(path):
 
     cur_action = None
     rules_block = True
+    headers_block = False
     response = []
 
     lineno = 0
@@ -245,9 +267,13 @@ def parse_actions(path):
         line = line.strip()
 
         # Empty line
-        if len(line) == 0 and rules_block:
-            if cur_action is not None:
-                rules_block = False
+        if len(line) == 0:
+            if rules_block:
+                if cur_action is not None:
+                    rules_block = False
+                    headers_block = True
+            elif headers_block:
+                headers_block = False
 
             continue
 
@@ -284,11 +310,13 @@ def parse_actions(path):
             except Exception as e:
                 raise Exception("line %d: Unable to parse rule: %s" %
                                 (lineno, str(e)))
-        else:
+        elif headers_block:
             # First comes the response code
             if cur_action.response_code is None:
                 cur_action.response_code = int(line)
             else:
-                response.append(line)
+                cur_action.add_header(parse_header(line))
+        else:
+            response.append(line)
 
     return actions

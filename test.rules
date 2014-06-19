@@ -4,6 +4,7 @@
     BODY match INSIDE BODY
 
     200
+
     BODY match test result
 }
 
@@ -13,6 +14,7 @@
     METHOD POST
 
     200
+
     BODY eq test result
 }
 
@@ -22,6 +24,7 @@
     METHOD GET
 
     200
+
     URL eq test result
 }
 
@@ -31,6 +34,7 @@
     METHOD GET
 
     200
+
     URL match test result
 }
 
@@ -39,6 +43,7 @@
     PARAM x match wtf
 
     200
+
     PARAM match test result
 }
 
@@ -47,6 +52,7 @@
     PARAM y eq yval
 
     200
+
     PARAM eq test result
 }
 
@@ -59,6 +65,7 @@
     PARAM param2 match b
 
     200
+
     Complex test result
 }
 
@@ -68,5 +75,19 @@
     URL eq /substitute
 
     200
+
     Here goes query param a: ${a}
 }
+
+# Headers test
+{
+    METHOD GET
+    URL eq /headers
+
+    200
+    HEADER A B
+    HEADER X Y
+
+    Headers reponse
+}
+

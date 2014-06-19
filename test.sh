@@ -33,5 +33,8 @@ echo -n "* Complex test.."
 echo -n "* Substitute test.."
 [[ "$(curl -X GET 'http://localhost:8000/substitute?a=111' 2> /dev/null)" == 'Here goes query param a: 111' ]] && echo -e "${ok}OK${n}" || echo -e "${err}NOK${n}"
 
+echo -n "* Headers test.."
+[[ "$(curl -i -s -X GET 'http://localhost:8000/headers' | grep 'A: B')" ]] && echo -e "${ok}OK${n}" || echo -e "${err}NOK${n}"
+
 echo -n "* No match.."
 [[ "$(curl -v -X GET http://localhost:8000/?a=1 2> /dev/null)" == '' ]] && echo -e "${ok}OK${n}" || echo -e "${err}NOK${n}"

@@ -22,11 +22,15 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
         # Iterate over actions to find first match
         for action in self.server.actions:
             if action(self):
-               self.send_response(action.response_code, "")
-               self.end_headers()
-               self.wfile.write(self.substitute_body(action.response_body))
+                self.send_response(action.response_code, "")
 
-               return
+                for h,v in action.headers:
+                    self.send_header(h, v)
+
+                self.end_headers()
+                self.wfile.write(self.substitute_body(action.response_body))
+
+                return
 
         print "*** No rule matched: %s" % (self.path)
         self.send_response(404, "")
