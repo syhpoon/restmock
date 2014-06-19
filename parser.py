@@ -236,10 +236,10 @@ def parse_header(line):
     HEADER <NAME> <VALUE>
     """
 
-    r = re.search(r'HEADER\s+(.+?)\s+(.+?)', line)
+    r = re.match(r'^\s*HEADER\s+(\S+?)\s+(\S+?)\s*$', line)
 
     if r is None:
-        raise Exception("Invalid header syntax")
+        raise Exception("Invalid header syntax: %s" % str(line))
 
     return r.group(1), r.group(2)
 
